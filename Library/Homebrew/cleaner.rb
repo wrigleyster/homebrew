@@ -36,7 +36,7 @@ class Cleaner
 
       # strip unlinks the file and recreates it, thus breaking hard links!
       # is this expected behaviour? patch does it too… still, this fixes it
-      tmp = `/usr/bin/mktemp -t homebrew_strip`.chomp
+      tmp = `/usr/bin/mktemp -t homebrew_strip`.chomp        #TODO Mac -- /usr/bin/mktemp
       begin
         `/usr/bin/strip #{args} -o #{tmp} #{path}`
         `/bin/cat #{tmp} > #{path}`
