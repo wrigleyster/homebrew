@@ -232,7 +232,7 @@ class Formula
   def fails_with_llvm?
     llvm = self.class.fails_with_llvm_reason
     if llvm
-      if llvm.build and MacOS.llvm_build_version.to_i > llvm.build.to_i
+      if llvm.build and MacOS.llvm_build_version.to_i > llvm.build.to_i     #TODO Mac
         false
       else
         llvm
@@ -334,7 +334,7 @@ class Formula
       opoo "Building with LLVM, but this formula is reported to not work with LLVM:"
       puts
       puts llvm.reason
-      puts
+      puts                          #TODO Mac
       puts <<-EOS.undent
         We are continuing anyway so if the build succeeds, please open a ticket with
         the following information: #{MacOS.llvm_build_version}-#{MACOS_VERSION}. So
@@ -494,7 +494,7 @@ protected
     ohai "#{cmd} #{pretty_args*' '}".strip
 
     removed_ENV_variables = case if args.empty? then cmd.split(' ').first else cmd end
-    when "xcodebuild"
+    when "xcodebuild"            #TODO Mac
       ENV.remove_cc_etc
     end
 
@@ -539,7 +539,7 @@ private
     # /tmp volume to the other volume. So we let the user override the tmp
     # prefix if they need to.
     tmp_prefix = ENV['HOMEBREW_TEMP'] || '/tmp'
-    tmp=Pathname.new `/usr/bin/mktemp -d #{tmp_prefix}/homebrew-#{name}-#{version}-XXXX`.strip
+    tmp=Pathname.new `mktemp -d #{tmp_prefix}/homebrew-#{name}-#{version}-XXXX`.strip    #TODO Mac -- /usr/bin/mktemp
     raise "Couldn't create build sandbox" if not tmp.directory? or $? != 0
     begin
       wd=Dir.pwd

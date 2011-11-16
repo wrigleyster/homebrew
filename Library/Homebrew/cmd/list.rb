@@ -33,7 +33,7 @@ class PrettyListing
         pn.find { |pnn| puts pnn unless pnn.directory? }
       when 'lib'
         print_dir pn do |pnn|
-          # dylibs have multiple symlinks and we don't care about them
+          # dylibs have multiple symlinks and we don't care about them     #TODO Mac
           (pnn.extname == '.dylib' or pnn.extname == '.pc') and not pnn.symlink?
         end
       else
@@ -42,7 +42,7 @@ class PrettyListing
             puts "#{pn} -> #{pn.readlink}"
           else
             print_dir pn
-          end
+          end                                      #TODO Mac
         elsif not (FORMULA_META_FILES + ['.DS_Store']).include? pn.basename.to_s
           puts pn
         end
@@ -61,7 +61,7 @@ class PrettyListing
       elsif block_given? and yield pn
         puts pn
         other = 'other '
-      else
+      else                  #TODO Mac
         remaining_root_files << pn unless pn.basename.to_s == '.DS_Store'
       end
     end

@@ -17,7 +17,7 @@ module Homebrew extend self
   end
 
   def versions
-    raise "Please `brew install git` first" unless system "/usr/bin/which -s git"
+    raise "Please `brew install git` first" unless system "/usr/bin/which -s git"        #TODO Mac
 
     ARGV.formulae.all? do |f|
       old_versions = Versions.old_versions f do |version, sha|

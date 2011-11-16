@@ -31,7 +31,8 @@ module HomebrewEnvExtension
     unless File.exist? ENV['CC'] and File.exist? ENV['CXX']
       ENV['CC']  = '/usr/bin/cc'
       ENV['CXX'] = '/usr/bin/c++'
-      @compiler = MacOS.default_compiler
+      @compiler = MacOS.default_compiler if Os.flavour.equal? :mac     #TODO Mac
+      @compiler = Linux.default_compiler if Os.flavour.equal? :linux
     end
 
     # In rare cases this may break your builds, as the tool for some reason wants
@@ -46,37 +47,38 @@ module HomebrewEnvExtension
     # http://gcc.gnu.org/onlinedocs/gcc-4.2.1/gcc/i386-and-x86_002d64-Options.html
     # We don't set, eg. -msse3 because the march flag does that for us:
     # http://gcc.gnu.org/onlinedocs/gcc-4.3.3/gcc/i386-and-x86_002d64-Options.html
-    if MACOS_VERSION >= 10.6
-      case Hardware.intel_family
-      when :nehalem, :penryn, :core2, :arrandale, :sandybridge
-        # the 64 bit compiler adds -mfpmath=sse for us
-        cflags << "-march=core2"
-      when :core
-        cflags<<"-march=prescott"<<"-mfpmath=sse"
-      else
-        # note that this didn't work on older versions of Xcode's gcc
-        # and maybe still doesn't. But it's at least not worse than nothing.
-        # UPDATE with Xcode 4.1 doesn't work at all.
-        # TODO there must be something useful!?
-        #cflags << "-march=native"
-      end
-      # gcc doesn't auto add msse4 or above (based on march flag) yet
-      case Hardware.intel_family
-      when :nehalem
-        cflags << "-msse4" # means msse4.2 and msse4.1
-      when :penryn
-        cflags << "-msse4.1"
-      end
-    else
-      # gcc 4.0 didn't support msse4
-      case Hardware.intel_family
-      when :nehalem, :penryn, :core2
-        cflags<<"-march=nocona"
-      when :core
-        cflags<<"-march=prescott"
-      end
-      cflags<<"-mfpmath=sse"
-    end
+    # TODO Mac -- uncomment
+    #if MACOS_VERSION >= 10.6
+    #  case Hardware.intel_family
+    #  when :nehalem, :penryn, :core2, :arrandale, :sandybridge
+    #    # the 64 bit compiler adds -mfpmath=sse for us
+    #    cflags << "-march=core2"
+    #  when :core
+    #    cflags<<"-march=prescott"<<"-mfpmath=sse"
+    #  else
+    #    # note that this didn't work on older versions of Xcode's gcc
+    #    # and maybe still doesn't. But it's at least not worse than nothing.
+    #    # UPDATE with Xcode 4.1 doesn't work at all.
+    #    # TODO there must be something useful!?
+    #    #cflags << "-march=native"
+    #  end
+    #  # gcc doesn't auto add msse4 or above (based on march flag) yet
+    #  case Hardware.intel_family
+    #  when :nehalem
+    #    cflags << "-msse4" # means msse4.2 and msse4.1
+    #  when :penryn
+    #    cflags << "-msse4.1"
+    #  end
+    #else
+    #  # gcc 4.0 didn't support msse4
+    #  case Hardware.intel_family
+    #  when :nehalem, :penryn, :core2
+    #    cflags<<"-march=nocona"
+    #  when :core
+    #    cflags<<"-march=prescott"
+    #  end
+    #  cflags<<"-mfpmath=sse"
+    #end
 
     self['CFLAGS'] = self['CXXFLAGS'] = "#{cflags*' '} #{SAFE_CFLAGS_FLAGS}"
   end
@@ -85,7 +87,7 @@ module HomebrewEnvExtension
     remove 'MAKEFLAGS', /-j\d+/
   end
   alias_method :j1, :deparallelize
-
+                                          #TODO Mac
   # recommended by Apple, but, eg. wget won't compile with this flag, so…
   def fast
     remove_from_cflags(/-O./)
@@ -121,14 +123,14 @@ module HomebrewEnvExtension
     self['CC'] = '/usr/bin/gcc-4.0'
     self['CXX'] = '/usr/bin/g++-4.0'
     remove_from_cflags '-O4'
-    remove_from_cflags '-march=core2'
+    remove_from_cflags '-march=core2'      #TODO Mac
     remove_from_cflags %r{-msse4(\.\d)?}
     @compiler = :gcc
   end
   alias_method :gcc_4_0, :gcc_4_0_1
 
   def gcc args = {}
-    self['CC']  = "/usr/bin/gcc-4.2"
+    self['CC']  = "/usr/bin/gcc-4.2"           #TODO Mac?
     self['CXX'] = "/usr/bin/g++-4.2"
     remove_from_cflags '-O4'
     @compiler = :gcc
@@ -199,12 +201,12 @@ Please take one of the following actions:
     end
   end
 
-  def osx_10_4
+  def osx_10_4                                   #TODO Mac
     self['MACOSX_DEPLOYMENT_TARGET']="10.4"
     remove_from_cflags(/ ?-mmacosx-version-min=10\.\d/)
     append_to_cflags('-mmacosx-version-min=10.4')
   end
-  def osx_10_5
+  def osx_10_5                                   #TODO Mac
     self['MACOSX_DEPLOYMENT_TARGET']="10.5"
     remove_from_cflags(/ ?-mmacosx-version-min=10\.\d/)
     append_to_cflags('-mmacosx-version-min=10.5')
@@ -222,7 +224,7 @@ Please take one of the following actions:
     append_to_cflags '-I/usr/include/libxml2'
   end
 
-  def x11
+  def x11                                        #TODO Mac
     opoo "You do not have X11 installed, this formula may not build." if not MacOS.x11_installed?
 
     # There are some config scripts (e.g. freetype) here that should go in the path
@@ -263,7 +265,7 @@ Please take one of the following actions:
   end
 
   # i386 and x86_64 (no PPC)
-  def universal_binary
+  def universal_binary                    #TODO Mac
     append_to_cflags '-arch i386 -arch x86_64'
     self.O3 if self['CFLAGS'].include? '-O4' # O4 seems to cause the build to fail
     append 'LDFLAGS', '-arch i386 -arch x86_64'
@@ -326,8 +328,12 @@ Please take one of the following actions:
       :llvm
     elsif self['HOMEBREW_USE_GCC']
       :gcc
-    else
+    elsif Os.flavour.equal? :mac         #TODO Mac
       MacOS.default_compiler
+    elsif Os.flavour.equal? :linux
+      Linux.default_compiler
+    else
+      abort "Cannot determine which compiler to use."
     end
   end
 

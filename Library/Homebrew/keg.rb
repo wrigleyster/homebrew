@@ -101,7 +101,7 @@ protected
   end
 
   # symlinks the contents of self+foo recursively into /usr/local/foo
-  def link_dir foo
+  def link_dir foo     #TODO Mac?
     root = self+foo
     return unless root.exist?
 

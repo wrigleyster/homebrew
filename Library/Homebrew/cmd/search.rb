@@ -3,7 +3,7 @@ require "blacklist"
 
 module Homebrew extend self
   def search
-    if ARGV.include? '--macports'
+    if ARGV.include? '--macports'             #TODO Mac
       exec "open", "http://www.macports.org/ports.php?by=name&substr=#{ARGV.next}"
     elsif ARGV.include? '--fink'
       exec "open", "http://pdb.finkproject.org/pdb/browse.php?summary=#{ARGV.next}"

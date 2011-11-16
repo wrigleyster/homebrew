@@ -115,7 +115,7 @@ def audit_formula_text name, text
     problems << " * Use ENV.fortran during install instead of depends_on 'gfortran'"
   end unless name == "gfortran" # Gfortran itself has this text in the caveats
 
-  # xcodebuild should specify SYMROOT
+  # xcodebuild should specify SYMROOT       #TODO Mac
   if text =~ /xcodebuild/ and not text =~ /SYMROOT=/
     problems << " * xcodebuild should be passed an explicit \"SYMROOT\""
   end if strict?
@@ -150,7 +150,7 @@ def audit_formula_options f, text
   end
 
   if documented_options.length > 0
-    documented_options.each do |o|
+    documented_options.each do |o|       #TODO Mac
       next if o == '--universal' and text =~ /ARGV\.build_universal\?/
       problems << " * Option #{o} is unused" unless options.include? o
     end

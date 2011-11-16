@@ -27,7 +27,7 @@ module Homebrew extend self
 
     %w[ CFLAGS CXXFLAGS CPPFLAGS LDFLAGS MACOSX_DEPLOYMENT_TARGET MAKEFLAGS PKG_CONFIG_PATH
         HOMEBREW_DEBUG HOMEBREW_VERBOSE HOMEBREW_USE_CLANG HOMEBREW_USE_GCC HOMEBREW_USE_LLVM
-        HOMEBREW_SVN ].each do |k|
+        HOMEBREW_SVN ].each do |k|     #TODO Mac?
       value = env[k]
       puts "#{k}: #{value}" if value
     end

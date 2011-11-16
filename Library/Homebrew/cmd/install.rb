@@ -39,28 +39,37 @@ module Homebrew extend self
   end
 
   def check_cc
-    if MacOS.snow_leopard?
-      if MacOS.llvm_build_version < RECOMMENDED_LLVM
-        opoo "You should upgrade to Xcode 3.2.6"
-      end
-    else
-      if (MacOS.gcc_40_build_version < RECOMMENDED_GCC_40) or (MacOS.gcc_42_build_version < RECOMMENDED_GCC_42)
-        opoo "You should upgrade to Xcode 3.1.4"
-      end
+    case Os.flavour
+      when :mac          #TODO Mac
+        if MacOS.snow_leopard?
+          if MacOS.llvm_build_version < RECOMMENDED_LLVM
+            opoo "You should upgrade to Xcode 3.2.6"
+          end
+        else
+          if (MacOS.gcc_40_build_version < RECOMMENDED_GCC_40) or (MacOS.gcc_42_build_version < RECOMMENDED_GCC_42)
+            opoo "You should upgrade to Xcode 3.1.4"
+          end
+        end
+      when :linux
+        if not Linux.default_cc
+          opoo "You need to install gcc"
+        end
     end
   rescue
     # the reason we don't abort is some formula don't require Xcode
     # TODO allow formula to declare themselves as "not needing Xcode"
-    opoo "Xcode is not installed! Builds may fail!"
+    opoo "Xcode is not installed! Builds may fail!"  #TODO Mac
   end
 
-  def check_macports
-    if MacOS.macports_or_fink_installed?
-      opoo "It appears you have MacPorts or Fink installed."
-      puts "Software installed with other package managers causes known problems for"
-      puts "Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again."
+  #if Os.flavour.equal? :mac
+    def check_macports        #TODO Mac
+      if MacOS.macports_or_fink_installed?
+        opoo "It appears you have MacPorts or Fink installed."
+        puts "Software installed with other package managers causes known problems for"
+        puts "Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again."
+      end
     end
-  end
+  #end
 
   def check_cellar
     FileUtils.mkdir_p HOMEBREW_CELLAR if not File.exist? HOMEBREW_CELLAR
@@ -72,10 +81,10 @@ module Homebrew extend self
   end
 
   def perform_preinstall_checks
-    check_ppc
+    check_ppc                     #TODO Mac
     check_writable_install_location
     check_cc
-    check_macports
+    check_macports if Os.flavour.equal? :mac     #TODO Mac
     check_cellar
   end
 

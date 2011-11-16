@@ -3,7 +3,7 @@ require 'blacklist'
 
 module Homebrew extend self
   def create
-    if ARGV.include? '--macports'
+    if ARGV.include? '--macports'                #TODO Mac
       exec "open", "http://www.macports.org/ports.php?by=name&substr=#{ARGV.next}"
     elsif ARGV.include? '--fink'
       exec "open", "http://pdb.finkproject.org/pdb/browse.php?summary=#{ARGV.next}"
@@ -27,7 +27,7 @@ module Homebrew extend self
           fc.path = Formula.path fc.name
         end
 
-        unless ARGV.force?
+        unless ARGV.force?                       #TODO Mac?
           if msg = blacklisted?(fc.name)
             raise "#{fc.name} is blacklisted for creation.\n#{msg}\nIf you really want to create this formula use --force."
           end

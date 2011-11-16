@@ -39,17 +39,20 @@ HOMEBREW_CELLAR = if (HOMEBREW_PREFIX+"Cellar").exist?
 else
   HOMEBREW_REPOSITORY+"Cellar"
 end
+require 'os'                   #TODO Mac
+if Os.flavour.equal? :mac
+  MACOS_FULL_VERSION = `/usr/bin/sw_vers -productVersion`.chomp
+  MACOS_VERSION = /(10\.\d+)(\.\d+)?/.match(MACOS_FULL_VERSION).captures.first.to_f
 
-MACOS_FULL_VERSION = `/usr/bin/sw_vers -productVersion`.chomp
-MACOS_VERSION = /(10\.\d+)(\.\d+)?/.match(MACOS_FULL_VERSION).captures.first.to_f
-
-HOMEBREW_USER_AGENT = "Homebrew #{HOMEBREW_VERSION} (Ruby #{RUBY_VERSION}-#{RUBY_PATCHLEVEL}; Mac OS X #{MACOS_FULL_VERSION})"
+  RECOMMENDED_LLVM = 2326
+  RECOMMENDED_GCC_40 = (MACOS_VERSION >= 10.6) ? 5494 : 5493
+  RECOMMENDED_GCC_42 = (MACOS_VERSION >= 10.6) ? 5664 : 5577
+end
+                                #TODO Mac
+HOMEBREW_USER_AGENT = "Homebrew #{HOMEBREW_VERSION} (Ruby #{RUBY_VERSION}-#{RUBY_PATCHLEVEL}; #{Os.name}#{Os.full_version})"
 
 HOMEBREW_CURL_ARGS = '-f#LA'
 
-RECOMMENDED_LLVM = 2326
-RECOMMENDED_GCC_40 = (MACOS_VERSION >= 10.6) ? 5494 : 5493
-RECOMMENDED_GCC_42 = (MACOS_VERSION >= 10.6) ? 5664 : 5577
 
 require 'fileutils'
 module Homebrew extend self

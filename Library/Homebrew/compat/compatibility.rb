@@ -15,32 +15,42 @@ def dump_build_env env
   Homebrew.dump_build_env env
 end
 
-def default_cc
-  MacOS.default_cc
+case Os.flavour
+  when :mac        #TODO Mac
+    def default_cc
+      MacOS.default_cc
+    end
+
+    def gcc_42_build
+      MacOS.gcc_42_build_version
+    end
+
+    def gcc_40_build
+      MacOS.gcc_40_build_version
+    end
+
+    alias :gcc_build :gcc_42_build
+
+    def llvm_build
+      MacOS.llvm_build_version
+    end
+
+    def x11_installed?
+      MacOS.x11_installed?
+    end
+
+    def macports_or_fink_installed?
+      MacOS.macports_or_fink_installed?
+    end
+
+    def snow_leopard_64?
+      MacOS.prefer_64_bit?
+    end
+  when :linux
+    def default_cc
+      Linux.default_cc
+    end
 end
-
-def gcc_42_build
-  MacOS.gcc_42_build_version
-end
-
-alias :gcc_build :gcc_42_build
-
-def gcc_40_build
-  MacOS.gcc_40_build_version
-end
-
-def llvm_build
-  MacOS.llvm_build_version
-end
-
-def x11_installed?
-  MacOS.x11_installed?
-end
-
-def macports_or_fink_installed?
-  MacOS.macports_or_fink_installed?
-end
-
 def outdated_brews
   require 'cmd/outdated'
   Homebrew.outdated_brews
@@ -51,9 +61,7 @@ def search_brews text
   Homebrew.search_brews text
 end
 
-def snow_leopard_64?
-  MacOS.prefer_64_bit?
-end
+
 
 class Formula
   # in compatability because the naming is somewhat confusing

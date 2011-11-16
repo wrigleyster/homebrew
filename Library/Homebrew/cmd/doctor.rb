@@ -49,7 +49,7 @@ def check_for_macgpg2
   end
 end
 
-def check_for_stray_dylibs
+def check_for_stray_dylibs             #TODO Mac
   unbrewed_dylibs = Dir['/usr/local/lib/*.dylib'].select { |f| File.file? f and not File.symlink? f }
 
   # Dylibs which are generally OK should be added to this list,
@@ -74,7 +74,7 @@ def check_for_stray_dylibs
   puts
 end
 
-def check_for_stray_static_libs
+def check_for_stray_static_libs       #Todo mac?
   unbrewed_alibs = Dir['/usr/local/lib/*.a'].select { |f| File.file? f and not File.symlink? f }
   return if unbrewed_alibs.empty?
 
@@ -90,7 +90,7 @@ def check_for_stray_static_libs
   puts
 end
 
-def check_for_stray_pcs
+def check_for_stray_pcs           #Todo Mac?
   unbrewed_pcs = Dir['/usr/local/lib/pkgconfig/*.pc'].select { |f| File.file? f and not File.symlink? f }
 
   # Package-config files which are generally OK should be added to this list,
@@ -114,7 +114,7 @@ def check_for_stray_pcs
   puts
 end
 
-def check_for_stray_las
+def check_for_stray_las            #Todo Mac?
   unbrewed_las = Dir['/usr/local/lib/*.la'].select { |f| File.file? f and not File.symlink? f }
 
   white_list = {
@@ -137,7 +137,7 @@ def check_for_stray_las
   puts
 end
 
-def check_for_x11
+def check_for_x11                   #Todo Mac?
   unless x11_installed?
     puts <<-EOS.undent
       X11 not installed.
@@ -149,7 +149,7 @@ def check_for_x11
   end
 end
 
-def check_for_nonstandard_x11
+def check_for_nonstandard_x11        #Todo Mac?
   return unless File.exists? '/usr/X11'
   x11 = Pathname.new('/usr/X11')
   if x11.symlink?
@@ -164,7 +164,7 @@ def check_for_nonstandard_x11
   end
 end
 
-def check_for_other_package_managers
+def check_for_other_package_managers #Todo Mac?
   if macports_or_fink_installed?
     puts <<-EOS.undent
       You have Macports or Fink installed. This can cause trouble.
@@ -177,7 +177,7 @@ def check_for_other_package_managers
   end
 end
 
-def check_gcc_versions
+def check_gcc_versions               #Todo Mac?
   gcc_42 = gcc_42_build
   gcc_40 = gcc_40_build
 
@@ -320,7 +320,7 @@ def check_homebrew_prefix
   end
 end
 
-def check_xcode_prefix
+def check_xcode_prefix          #Todo Mac
   prefix = MacOS.xcode_prefix
   return if prefix.nil?
   if prefix.to_s.match(' ')
@@ -435,7 +435,7 @@ def check_pkg_config_paths
   end
 end
 
-def check_for_gettext
+def check_for_gettext                     #Todo Mac
   if %w[lib/libgettextlib.dylib
         lib/libintl.dylib
         include/libintl.h ].any? { |f| File.exist? "#{HOMEBREW_PREFIX}/#{f}" }
@@ -456,7 +456,7 @@ def check_for_gettext
   end
 end
 
-def check_for_iconv
+def check_for_iconv                       #Todo Mac
   if %w[lib/libiconv.dylib
         include/iconv.h ].any? { |f| File.exist? "#{HOMEBREW_PREFIX}/#{f}" }
     puts <<-EOS.undent
@@ -507,7 +507,7 @@ def check_for_config_scripts
   end
 end
 
-def check_for_dyld_vars
+def check_for_dyld_vars                   #Todo Mac
   if ENV['DYLD_LIBRARY_PATH']
     puts <<-EOS.undent
       Setting DYLD_LIBRARY_PATH can break dynamic linking.
@@ -669,7 +669,7 @@ def check_for_linked_kegonly_brews
   end
 end
 
-def check_for_MACOSX_DEPLOYMENT_TARGET
+def check_for_MACOSX_DEPLOYMENT_TARGET             #TODO Mac
   target_var = ENV['MACOSX_DEPLOYMENT_TARGET']
   return if target_var.to_s.empty?
 
@@ -751,14 +751,14 @@ end
 
 def check_git_status
   status_cmd = "git --git-dir=#{HOMEBREW_REPOSITORY}/.git --work-tree=#{HOMEBREW_PREFIX} status -s #{HOMEBREW_PREFIX}/Library/Homebrew"
-  if system "/usr/bin/which -s git" and File.directory? HOMEBREW_REPOSITORY+'.git' and not `#{status_cmd}`.empty?
+  if system "/usr/bin/which -s git" and File.directory? HOMEBREW_REPOSITORY+'.git' and not `#{status_cmd}`.empty?   #TODO Mac
     ohai "You have uncommitted modifications to Homebrew core"
     puts "Unless you know what you are doing, you should: git reset --hard"
     puts
   end
 end
 
-def check_for_leopard_ssl
+def check_for_leopard_ssl                      #TODO Mac
   if MacOS.leopard? and not ENV['GIT_SSL_NO_VERIFY']
     puts <<-EOS.undent
       The version of libcurl provided with Mac OS X Leopard has outdated
@@ -777,7 +777,7 @@ end
 
 def check_git_version
   # see https://github.com/blog/642-smart-http-support
-  return unless system "/usr/bin/which -s git"
+  return unless system "/usr/bin/which -s git"           #TODO Mac
   `git --version`.chomp =~ /git version (\d)\.(\d)\.(\d)/
 
   if $2.to_i > 6
@@ -797,7 +797,7 @@ def check_git_version
   end
 end
 
-module Homebrew extend self
+module Homebrew extend self          #TODO Mac
   def doctor
     old_stdout = $stdout
     $stdout = output = StringIO.new

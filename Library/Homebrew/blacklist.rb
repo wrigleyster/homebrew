@@ -1,4 +1,4 @@
-def blacklisted? name
+def blacklisted? name       #TODO Mac
   case name.downcase
   when 'vim', 'screen', /^rubygems?$/ then <<-EOS.undent
     Apple distributes #{name} with OS X, you can find it in /usr/bin.

@@ -67,10 +67,10 @@ module HomebrewArgvExtension
   end
 
   def build_universal?
-    include? '--universal'
+    include? '--universal'    #TODO Mac
   end
 
-  def build_from_source?
+  def build_from_source?      #TODO Mac
     return true if flag? '--build-from-source' or ENV['HOMEBREW_BUILD_FROM_SOURCE'] \
       or not MacOS.lion? or HOMEBREW_PREFIX.to_s != '/usr/local'
     options = options_only

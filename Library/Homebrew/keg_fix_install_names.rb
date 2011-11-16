@@ -1,6 +1,6 @@
 class Keg
   def fix_install_names
-    dylibs.each do |dylib|
+    dylibs.each do |dylib|        #TODO Mac
       bad_install_names_for dylib do |id, bad_names|
         dylib.ensure_writable do
           system "install_name_tool", "-id", id, dylib
@@ -17,7 +17,7 @@ class Keg
 
   OTOOL_RX = /\t(.*) \(compatibility version (\d+\.)*\d+, current version (\d+\.)*\d+\)/
 
-  def bad_install_names_for dylib
+  def bad_install_names_for dylib        #TODO Mac
     dylib = dylib.to_s
 
     ENV['HOMEBREW_DYLIB'] = dylib # solves all shell escaping problems
@@ -37,7 +37,7 @@ class Keg
     yield id, install_names
   end
 
-  def dylibs
+  def dylibs                                  #TODO Mac
     if (lib = join 'lib').directory?
       lib.children.select{ |pn| pn.extname == '.dylib' and not pn.symlink? }
     else

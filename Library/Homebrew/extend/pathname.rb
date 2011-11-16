@@ -92,9 +92,9 @@ class Pathname
 
   def abv
     out=''
-    n=`find #{to_s} -type f ! -name .DS_Store | wc -l`.to_i
+    n=`find #{to_s} -type f ! -name .DS_Store | wc -l`.to_i    #TODO Mac
     out<<"#{n} files, " if n > 1
-    out<<`/usr/bin/du -hd0 #{to_s} | cut -d"\t" -f1`.strip
+    out<<`/usr/bin/du -hs #{to_s} | cut -d"\t" -f1`.strip   #TODO Mac   -- fixed posix compliant (-hd0)
   end
 
   # attempts to retrieve the version component of this path, so generally
