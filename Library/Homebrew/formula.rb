@@ -768,6 +768,18 @@ EOF
       end
     end
 
+    def must_exist name, path
+      if name.kind_of? String and path.kind_of? String
+        raise "#{name} must be installed" unless Pathname.new(path.chomp()  ).exist?
+      else
+        if name == String
+          raise "Unsupported type #{path.class}"
+        else
+          raise "Unsupported type #{name.class}"
+        end
+      end
+    end
+
     def skip_clean paths
       if paths == :all
         @skip_clean_all = true
