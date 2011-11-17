@@ -1,6 +1,9 @@
+require 'os/linux'
+require 'os/mac'
+
 class Os
   def self.flavour
-    @@flavour ||= `uname -s`
+    @@flavour ||= `uname -s`.chomp
     case @@flavour
       when /^Linux/
         :linux
@@ -18,10 +21,18 @@ class Os
     end
   end
 
+  def self.mac?
+    flavour.equal? :mac
+  end
+
+  def self.linux?
+    flavour.equal? :linux
+  end
+
   def self.full_version
     case flavour
       when :linux
-         `uname -v`   #TODO
+         `uname -v`.chomp   #TODO
       when :mac
         `/usr/sbin/sysctl -n hw.cpufamily`.to_i
     end
@@ -30,7 +41,7 @@ class Os
   def self.name
     case flavour
       when :linux
-        `uname -o` #TODO
+        `uname -o`.chomp #TODO
       when :mac
         "Mac OS X"
     end

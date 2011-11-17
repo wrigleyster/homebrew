@@ -18,7 +18,7 @@ class Hardware
             :dunno
         end
       else
-
+        :dunno
     end
   end
 
@@ -77,7 +77,7 @@ class Hardware
   def self.is_64_bit?       #TODO Mac
     case Os.flavour
       when :linux
-        `uname -p` == "x86_64"
+        `uname -p`.chomp() == "x86_64"
       when :mac
         self.sysctl_bool("hw.cpu64bit_capable")
       else
